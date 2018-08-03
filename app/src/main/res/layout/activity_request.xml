@@ -1,0 +1,45 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:paddingLeft="16dp"
+    android:paddingRight="16dp"
+    android:paddingTop="16dp"
+    android:paddingBottom="16dp">
+
+    <TextView
+        android:id="@+id/title_tv"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="奇偶发"/>
+
+    <EditText
+        android:id="@+id/url_et"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="请求url"
+        android:layout_marginTop="5dp"/>
+
+    <EditText
+        android:id="@+id/body_et"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="请求body"
+        android:layout_marginTop="5dp"/>
+
+    <Button
+        android:id="@+id/start_btn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:text="发送请求"/>
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="5dp">
+        <TextView
+            android:id="@+id/result_tv"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+    </ScrollView>
+</LinearLayout>

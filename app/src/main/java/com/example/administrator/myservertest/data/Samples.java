@@ -18,7 +18,7 @@ public class Samples {
 
         //Audio items
         audioSamples = new LinkedList<>();
-        audioSamples.add(new Sample("Marseilles -- The Arrival", "https://archive.org/download/count_monte_cristo_0711_librivox/count_of_monte_cristo_001_dumas.mp3", audioImage));
+        audioSamples.add(new Sample("ThemeAction 4067", "http://pandahome.ifjing.com/action.ashx/ThemeAction/4067", "{\"PageIndex\":2,\"PageSize\":3,\"Mo\":2}"));
         audioSamples.add(new Sample("Father and Son", "https://archive.org/download/count_monte_cristo_0711_librivox/count_of_monte_cristo_002_dumas.mp3", audioImage));
         audioSamples.add(new Sample("The Catalans", "https://archive.org/download/count_monte_cristo_0711_librivox/count_of_monte_cristo_003_dumas.mp3", audioImage));
         audioSamples.add(new Sample("Conspiracy", "https://archive.org/download/count_monte_cristo_0711_librivox/count_of_monte_cristo_004_dumas.mp3", audioImage));
@@ -26,7 +26,7 @@ public class Samples {
 
         //Video items
         videoSamples = new ArrayList<>();
-        videoSamples.add(new Sample("FLV - Big Buck Bunny by Blender", "http://vod.leasewebcdn.com/bbb.flv?ri=1024&rs=150&start=0"));
+        videoSamples.add(new Sample("ThemeAction 4067", "http://pandahome.ifjing.com/action.ashx/ThemeAction/4067", "{\"PageIndex\":2,\"PageSize\":3,\"Mo\":2}"));
         videoSamples.add(new Sample("HLS - ArtBeats", "http://cdn-fms.rbs.com.br/vod/hls_sample1_manifest.m3u8"));
         videoSamples.add(new Sample("HLS - Sintel by Blender", "https://bitdash-a.akamaihd.net/content/sintel/hls/playlist.m3u8"));
         videoSamples.add(new Sample("MKV - Android Screens", "http://storage.googleapis.com/exoplayer-test-media-1/mkv/android-screens-lavf-56.36.100-aac-avc-main-1280x720.mkv"));
@@ -57,18 +57,18 @@ public class Samples {
         @NonNull
         private String title;
         @NonNull
-        private String mediaUrl;
+        private String requestUrl;
         @Nullable
-        private String artworkUrl;
+        private String requestBody;
 
-        public Sample(@NonNull String title, @NonNull String mediaUrl) {
-            this(title, mediaUrl, null);
+        public Sample(@NonNull String title, @NonNull String requestUrl) {
+            this(title, requestUrl, null);
         }
 
-        public Sample(@NonNull String title, @NonNull String mediaUrl, @Nullable String artworkUrl) {
+        public Sample(@NonNull String title, @NonNull String requestUrl, @Nullable String requestBody) {
             this.title = title;
-            this.mediaUrl = mediaUrl;
-            this.artworkUrl = artworkUrl;
+            this.requestUrl = requestUrl;
+            this.requestBody = requestBody;
         }
 
         @NonNull
@@ -77,13 +77,13 @@ public class Samples {
         }
 
         @NonNull
-        public String getMediaUrl() {
-            return mediaUrl;
+        public String getRequestUrl() {
+            return requestUrl;
         }
 
         @Nullable
-        public String getArtworkUrl() {
-            return artworkUrl;
+        public String getRequestBody() {
+            return requestBody;
         }
     }
 }

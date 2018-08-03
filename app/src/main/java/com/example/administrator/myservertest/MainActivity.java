@@ -1,7 +1,9 @@
 package com.example.administrator.myservertest;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
@@ -22,11 +24,20 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                NetOptApiHelper.getGuessLikeThemeList_4034(getApplicationContext());
-            }
-        }).start();
+//        new Thread(new Runnable() {
+//            @Override
+//            public void run() {
+//                NetOptApiHelper.getGuessLikeThemeList_4034(getApplicationContext());
+//            }
+//        }).start();
+
+//        String str = NetOptApiHelper.getUniquePsuedoID();
+//        Log.e("zhenghonglin","id:"+str);
+//        Log.e("zhenghonglin","id:"+DigestUtil.md5Hex(str));
+//        Log.e("zhenghonglin","id:"+DigestUtil.md5Hex("dfafejojo"));
+
+        Intent intent = new Intent(this, RequestEditActivity.class);
+        intent.putExtra(RequestEditActivity.EXTRA_INDEX, position);
+        startActivity(intent);
     }
 }
