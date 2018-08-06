@@ -1,6 +1,8 @@
 package com.example.administrator.myservertest;
 
 import android.content.Context;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.os.Build;
 import android.telephony.TelephonyManager;
 import android.text.TextUtils;
@@ -83,6 +85,9 @@ public class NetOptApiHelper {
         try {
             if (null == DivideVersion)
                 DivideVersion = utf8URLencode("9.5.1");
+            else {
+                utf8URLencode(getDivideVersion(ctx));
+            }
 
             if (null == SupPhone)
                 SupPhone = utf8URLencode(replaceIllegalCharacter(Build.MODEL, "_"));
@@ -112,6 +117,17 @@ public class NetOptApiHelper {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    public static String getDivideVersion(Context context) {
+        String versionName = "";
+        try {
+            PackageInfo packageinfo = context.getPackageManager().getPackageInfo(context.getPackageName(), PackageManager.GET_META_DATA);
+            versionName = packageinfo.versionName;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return versionName;
     }
 
     public static final String CHARSET_UTF_8 = "UTF-8";
