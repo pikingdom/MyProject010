@@ -8,6 +8,7 @@ import android.telephony.TelephonyManager;
 import android.text.TextUtils;
 
 
+import com.example.administrator.myservertest.data.Samples;
 import com.example.administrator.myservertest.net.ServerResultHeader;
 import com.example.administrator.myservertest.net.ThemeHttpCommon;
 
@@ -50,7 +51,7 @@ public class NetOptApiHelper {
     }
 
     /**国内服务器*/
-    public final static String Panda_Space_Inland_Server = "http://pandahome.ifjing.com/";
+    public final static String Panda_Space_Inland_Server = Samples.HOST;
     /**
      * 六、	主题相关接口(4001-5000)
      * @param actionCode
@@ -64,8 +65,8 @@ public class NetOptApiHelper {
     public static void addGlobalRequestValue(HashMap<String, String> paramsMap, Context ctx, String jsonParams) {
         addGlobalRequestValue(paramsMap, ctx, jsonParams, PID ,ProtocolVersion,REQUEST_KEY);
     }
-    public static final String REQUEST_KEY = "27B1F81F-1DD8-4F98-8D4B-6992828FB6E2";
-    public static final String VERSION = "3.0";
+    public static final String REQUEST_KEY = "BWG7X-J98B3-W34RT-33B3R-JVYW9";
+    public static final String VERSION = "1.0";
     public static final String ProtocolVersion = utf8URLencode(VERSION);
     public static String PID = "6";
     public static String DivideVersion;
@@ -75,6 +76,7 @@ public class NetOptApiHelper {
     public static String IMEI;
     public static String IMSI;
     public static String CUID;
+    public static String PkgName;
 
     public static void addGlobalRequestValue(HashMap<String, String> paramsMap, Context ctx, String jsonParams, String pid,String protocolVersion,String requestKey) {
         if (paramsMap == null)
@@ -84,10 +86,7 @@ public class NetOptApiHelper {
         }
         try {
             if (null == DivideVersion)
-                DivideVersion = utf8URLencode("9.5.1");
-            else {
-                utf8URLencode(getDivideVersion(ctx));
-            }
+                DivideVersion =utf8URLencode(getDivideVersion(ctx));
 
             if (null == SupPhone)
                 SupPhone = utf8URLencode(replaceIllegalCharacter(Build.MODEL, "_"));
@@ -99,6 +98,9 @@ public class NetOptApiHelper {
                 IMSI = utf8URLencode(getIMSI(ctx));
             if (null == CUID)
                 CUID = URLEncoder.encode(getCUID(ctx), "UTF-8");
+            if( null == PkgName){
+                PkgName = utf8URLencode(ctx.getPackageName());
+            }
 
             String sessionID = "";
 
@@ -111,8 +113,9 @@ public class NetOptApiHelper {
             paramsMap.put("IMSI", IMSI);
             paramsMap.put("SessionId", sessionID);
             paramsMap.put("CUID", CUID);//通用用户唯一标识 NdAnalytics.getCUID(ctx)
+            paramsMap.put("PkgName", PkgName);
             paramsMap.put("ProtocolVersion", protocolVersion);
-            String Sign = DigestUtil.md5Hex(pid + MT + DivideVersion + SupPhone + SupFirm + IMEI + IMSI + sessionID + CUID + protocolVersion + jsonParams + requestKey);
+            String Sign = DigestUtil.md5Hex(pid + MT + DivideVersion + SupPhone + SupFirm + IMEI + IMSI + sessionID + CUID +PkgName+ protocolVersion + jsonParams + requestKey);
             paramsMap.put("Sign", Sign);
         } catch (Exception e) {
             e.printStackTrace();

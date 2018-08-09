@@ -66,7 +66,7 @@ public class RequestEditActivity extends AppCompatActivity implements View.OnCli
         result_tv.setText("");
         final String jsonParams  = body_et.getText().toString();
         final String url = url_et.getText().toString();
-        if(TextUtils.isEmpty(jsonParams) || TextUtils.isEmpty(url)){
+        if(TextUtils.isEmpty(url)){
             return;
         }
         new Thread(new Runnable() {
