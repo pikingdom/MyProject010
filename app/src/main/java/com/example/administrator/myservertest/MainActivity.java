@@ -6,9 +6,10 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
-
 import com.example.administrator.myservertest.adapter.SampleListAdapter;
 import com.example.administrator.myservertest.data.Samples;
+import com.example.administrator.myservertest.download.DownloadManager;
+import com.nd.hilauncherdev.webconnect.downloadmanage.model.BaseDownloadInfo;
 
 public class MainActivity extends AppCompatActivity implements AdapterView.OnItemClickListener{
 
@@ -34,9 +35,23 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 //        Log.e("zhenghonglin","id:"+str);
 //        Log.e("zhenghonglin","id:"+DigestUtil.md5Hex(str));
 //        Log.e("zhenghonglin","id:"+DigestUtil.md5Hex("dfafejojo"));
+        if(position == 3){
+            String downloadUrl = Samples.HOST+"soft/download.aspx?Identifier=%s";
+            String pkg = "com.bai";
+            String url= String.format(downloadUrl,pkg);
+            final BaseDownloadInfo downloadInfo = new BaseDownloadInfo(pkg,
+                    BaseDownloadInfo.FILE_TYPE_APK,url, "aaa", "/sdcard/", "bai", null);
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    DownloadManager.getInstance(getApplicationContext()).addNormalTask(downloadInfo, null);
+                }
+            }).start();
+        } else {
+            Intent intent = new Intent(this, RequestEditActivity.class);
+            intent.putExtra(RequestEditActivity.EXTRA_INDEX, position);
+            startActivity(intent);
+        }
 
-        Intent intent = new Intent(this, RequestEditActivity.class);
-        intent.putExtra(RequestEditActivity.EXTRA_INDEX, position);
-        startActivity(intent);
     }
 }

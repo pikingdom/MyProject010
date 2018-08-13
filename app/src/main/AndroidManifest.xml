@@ -25,7 +25,10 @@
         <activity android:name=".RequestEditActivity">
         </activity>
 
-
+        <!-- 下载管理 -->
+        <service
+            android:name="com.nd.hilauncherdev.webconnect.downloadmanage.model.DownloadServerService"
+            android:exported="false" />
     </application>
 
 </manifest>
