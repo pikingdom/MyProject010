@@ -2,6 +2,7 @@ package com.example.administrator.myservertest;
 
 
 import android.text.TextUtils;
+import android.util.Log;
 
 import com.example.administrator.myservertest.apache.Hex;
 
@@ -68,7 +69,23 @@ public class DigestUtil {
     }
 
     public static String md5Hex(String data) {
-        return new String(Hex.encodeHex(md5(data)));
+	    String str1 = new String(Hex.encodeHex(md5(data)));
+	    String str2 = toHexString(md5(data));
+        Log.e("zhenghonglin","str1:"+str1);
+        Log.e("zhenghonglin","str2:"+str2);
+        return toHexString(md5(data));
+    }
+
+    public static String toHexString(byte[] byteArray) {
+        if (byteArray == null || byteArray.length < 1)
+            return "";
+        final StringBuilder hexString = new StringBuilder();
+        for (int i = 0; i < byteArray.length; i++) {
+            if ((byteArray[i] & 0xff) < 0x10)//0~F前面不零
+                hexString.append("0");
+            hexString.append(Integer.toHexString(0xFF & byteArray[i]));
+        }
+        return hexString.toString().toLowerCase();
     }
 
 

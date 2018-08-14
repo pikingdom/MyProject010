@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -11,8 +12,15 @@ import android.widget.TextView;
 
 import com.example.administrator.myservertest.data.Samples;
 import com.example.administrator.myservertest.okhttp.AppHttpRequest;
+import com.tsy.sdk.myokhttp.MyOkHttp;
+import com.tsy.sdk.myokhttp.response.JsonResponseHandler;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -30,6 +38,9 @@ public class RequestEditActivity extends AppCompatActivity implements View.OnCli
     private int selectedIndex;
 
     private Handler handler = new Handler();
+
+    private MyOkHttp mMyOkhttp;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -38,6 +49,8 @@ public class RequestEditActivity extends AppCompatActivity implements View.OnCli
         Bundle extras = getIntent().getExtras();
         selectedIndex = extras.getInt(EXTRA_INDEX, 0);
         initData();
+        mMyOkhttp = App.getContext().getMyOkHttp();
+
     }
 
     private void initData() {
@@ -72,6 +85,7 @@ public class RequestEditActivity extends AppCompatActivity implements View.OnCli
         if(TextUtils.isEmpty(jsonParams) || TextUtils.isEmpty(url)){
             return;
         }
+        //1、方法一
 //        new Thread(new Runnable() {
 //            @Override
 //            public void run() {
@@ -89,32 +103,57 @@ public class RequestEditActivity extends AppCompatActivity implements View.OnCli
 //            }
 //        }).start();
 //        AppHttpRequest doge = new AppHttpRequest.Builder().url(url).body(jsonParams).build();
-
-        AppHttpRequest.newBuilder()
-                .url(url)
-                .body(jsonParams)
-                .build()
-                .equeue(new Callback() {
+        //1、方法二
+//        AppHttpRequest.newBuilder()
+//                .url(url)
+//                .body(jsonParams)
+//                .build()
+//                .equeue(new Callback() {
+//                    @Override
+//                    public void onFailure(Call call, final IOException e) {
+//                        handler.post(new Runnable() {
+//                            @Override
+//                            public void run() {
+//                                result_tv.setText(e.getMessage());
+//                            }
+//                        });
+//                    }
+//
+//                    @Override
+//                    public void onResponse(Call call, Response response) throws IOException {
+//                        final String responseJson = response.body().string();
+//                        handler.post(new Runnable() {
+//                            @Override
+//                            public void run() {
+//                                result_tv.setText(responseJson);
+//                            }
+//                        });
+//                    }
+//                });
+        //1、方法三
+        Map<String, String> params = new HashMap<>();
+        params.put("PageIndex", "2");
+        params.put("PageSize", "3");
+        params.put("Mo", "2");
+        mMyOkhttp.post().url(url).params(params).tag(this)
+                .enqueue(new JsonResponseHandler() {
                     @Override
-                    public void onFailure(Call call, final IOException e) {
-                        handler.post(new Runnable() {
-                            @Override
-                            public void run() {
-                                result_tv.setText(e.getMessage());
-                            }
-                        });
+                    public void onSuccess(int statusCode, JSONObject response) {
                     }
 
                     @Override
-                    public void onResponse(Call call, Response response) throws IOException {
-                        final String responseJson = response.body().string();
-                        handler.post(new Runnable() {
-                            @Override
-                            public void run() {
-                                result_tv.setText(responseJson);
-                            }
-                        });
+                    public void onSuccess(int statusCode, JSONArray response) {
+                    }
+
+                    @Override
+                    public void onFailure(int statusCode, String error_msg) {
                     }
                 });
+    }
+
+    @Override
+    protected void onDestroy() {
+        mMyOkhttp.cancel(this);
+        super.onDestroy();
     }
 }

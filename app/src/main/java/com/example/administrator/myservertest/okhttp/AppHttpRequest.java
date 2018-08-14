@@ -152,15 +152,15 @@ public class AppHttpRequest {
 
     }
 
-    private static String getPid(){
+    public static String getPid(){
         return PID;
     }
 
-    private static String getMt(){
+    public static String getMt(){
         return MT;
     }
 
-    private static String getDivideVersion(){
+    public static String getDivideVersion(){
         if (null == DivideVersion)
             DivideVersion = NetOptApiHelper.utf8URLencode("9.5.1");
         else {
@@ -169,31 +169,31 @@ public class AppHttpRequest {
         return  DivideVersion;
     }
 
-    private static String getSupPhone(){
+    public static String getSupPhone(){
         if (null == SupPhone)
             SupPhone = NetOptApiHelper.utf8URLencode(NetOptApiHelper.replaceIllegalCharacter(Build.MODEL, "_"));
         return SupPhone;
     }
 
-    private static String getImei(){
+    public static String getImei(){
         if (null == IMEI)
             IMEI = NetOptApiHelper.utf8URLencode(NetOptApiHelper.getIMEI(App.getContext()));
         return IMEI;
     }
 
-    private static String getImsi(){
+    public static String getImsi(){
         if (null == IMSI)
             IMSI = NetOptApiHelper.utf8URLencode(NetOptApiHelper.getIMSI(App.getContext()));
         return IMSI;
     }
 
-    private static String getCuid(){
+    public static String getCuid(){
         if (null == CUID)
             CUID = NetOptApiHelper.getCUID(App.getContext());
         return CUID;
     }
 
-    private static String getSupFirm(){
+    public static String getSupFirm(){
         if (null == SupFirm)
             SupFirm = NetOptApiHelper.utf8URLencode(Build.VERSION.RELEASE);
         return SupFirm;
