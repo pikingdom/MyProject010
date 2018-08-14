@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -12,8 +13,16 @@ import android.widget.TextView;
 import com.example.administrator.myservertest.data.Samples;
 import com.example.administrator.myservertest.net.ServerResultHeader;
 import com.example.administrator.myservertest.net.ThemeHttpCommon;
+import com.google.gson.Gson;
+import com.tsy.sdk.myokhttp.MyOkHttp;
+import com.tsy.sdk.myokhttp.response.JsonResponseHandler;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.HashMap;
+import java.util.Map;
 
 public class RequestEditActivity extends AppCompatActivity implements View.OnClickListener{
     public static final String EXTRA_INDEX = "EXTRA_INDEX";
@@ -27,6 +36,7 @@ public class RequestEditActivity extends AppCompatActivity implements View.OnCli
     private int selectedIndex;
 
     private Handler handler = new Handler();
+    private MyOkHttp mMyOkhttp;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -35,6 +45,8 @@ public class RequestEditActivity extends AppCompatActivity implements View.OnCli
         Bundle extras = getIntent().getExtras();
         selectedIndex = extras.getInt(EXTRA_INDEX, 0);
         initData();
+        mMyOkhttp = App.getContext().getMyOkHttp();
+
     }
 
     private void initData() {
@@ -85,5 +97,29 @@ public class RequestEditActivity extends AppCompatActivity implements View.OnCli
                 });
             }
         }).start();
+
+        mMyOkhttp.post().url(url).jsonParams(jsonParams).tag(this)
+                .enqueue(new JsonResponseHandler() {
+                    @Override
+                    public void onSuccess(int statusCode, final JSONObject response) {
+                        result_tv.setText(response.toString());
+                    }
+
+                    @Override
+                    public void onSuccess(int statusCode, JSONArray response) {
+                    }
+
+                    @Override
+                    public void onFailure(int statusCode, String error_msg) {
+                        result_tv.setText(error_msg);
+                        Log.e("zhenghonglin","f statusCode:"+statusCode);
+                    }
+                });
+    }
+
+    @Override
+    protected void onDestroy() {
+        mMyOkhttp.cancel(this);
+        super.onDestroy();
     }
 }
