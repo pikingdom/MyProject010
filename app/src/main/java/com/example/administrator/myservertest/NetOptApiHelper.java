@@ -70,6 +70,7 @@ public class NetOptApiHelper {
     public static final String ProtocolVersion = utf8URLencode(VERSION);
     public static String PID = "6";
     public static String DivideVersion;
+    public static int VersionCode = -1;
     public static final String MT = "4";
     public static String SupPhone;
     public static String SupFirm;
@@ -101,12 +102,16 @@ public class NetOptApiHelper {
             if( null == PkgName){
                 PkgName = utf8URLencode(ctx.getPackageName());
             }
+            if(VersionCode == -1){
+                VersionCode = getVersionCode(ctx);
+            }
 
             String sessionID = "";
 
             paramsMap.put("PID", pid);
             paramsMap.put("MT", MT);
             paramsMap.put("DivideVersion", DivideVersion);
+            paramsMap.put("VersionCode", VersionCode+"");
             paramsMap.put("SupPhone", SupPhone);
             paramsMap.put("SupFirm", SupFirm);
             paramsMap.put("IMEI", IMEI);
@@ -115,7 +120,7 @@ public class NetOptApiHelper {
             paramsMap.put("CUID", CUID);//通用用户唯一标识 NdAnalytics.getCUID(ctx)
             paramsMap.put("PkgName", PkgName);
             paramsMap.put("ProtocolVersion", protocolVersion);
-            String Sign = DigestUtil.md5Hex(pid + MT + DivideVersion + SupPhone + SupFirm + IMEI + IMSI + sessionID + CUID +PkgName+ protocolVersion + jsonParams + requestKey);
+            String Sign = DigestUtil.md5Hex(pid + MT + DivideVersion +VersionCode+ SupPhone + SupFirm + IMEI + IMSI + sessionID + CUID +PkgName+ protocolVersion + jsonParams + requestKey);
             paramsMap.put("Sign", Sign);
         } catch (Exception e) {
             e.printStackTrace();
@@ -127,6 +132,17 @@ public class NetOptApiHelper {
         try {
             PackageInfo packageinfo = context.getPackageManager().getPackageInfo(context.getPackageName(), PackageManager.GET_META_DATA);
             versionName = packageinfo.versionName;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return versionName;
+    }
+
+    public static int getVersionCode(Context context) {
+        int versionName  = -1;
+        try {
+            PackageInfo packageinfo = context.getPackageManager().getPackageInfo(context.getPackageName(), PackageManager.GET_META_DATA);
+            versionName = packageinfo.versionCode;
         } catch (Exception e) {
             e.printStackTrace();
         }
