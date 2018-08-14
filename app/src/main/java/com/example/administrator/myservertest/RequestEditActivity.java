@@ -11,20 +11,16 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.example.administrator.myservertest.data.Samples;
-import com.example.administrator.myservertest.okhttp.AppHttpRequest;
+import com.google.gson.Gson;
 import com.tsy.sdk.myokhttp.MyOkHttp;
 import com.tsy.sdk.myokhttp.response.JsonResponseHandler;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
-
-import okhttp3.Call;
-import okhttp3.Callback;
-import okhttp3.Response;
 
 public class RequestEditActivity extends AppCompatActivity implements View.OnClickListener{
     public static final String EXTRA_INDEX = "EXTRA_INDEX";
@@ -139,6 +135,18 @@ public class RequestEditActivity extends AppCompatActivity implements View.OnCli
                 .enqueue(new JsonResponseHandler() {
                     @Override
                     public void onSuccess(int statusCode, JSONObject response) {
+                        JSONObject jsonObject = new JSONObject();
+                        try {
+                            jsonObject.put("name","zhenghonlin");
+                            jsonObject.put("sex","male");
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                        Log.e("zhenghonglin","statusCode:"+statusCode);
+                        Log.e("zhenghonglin","response:"+jsonObject.toString());
+                        User user = new Gson().fromJson(jsonObject.toString(),User.class);
+                        Log.e("zhenghonglin","name:"+user.getName());
+                        Log.e("zhenghonglin","sex:"+user.getSex());
                     }
 
                     @Override
@@ -147,6 +155,7 @@ public class RequestEditActivity extends AppCompatActivity implements View.OnCli
 
                     @Override
                     public void onFailure(int statusCode, String error_msg) {
+                        Log.e("zhenghonglin","f statusCode:"+statusCode);
                     }
                 });
     }
