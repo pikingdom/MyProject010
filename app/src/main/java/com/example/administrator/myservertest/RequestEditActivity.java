@@ -10,10 +10,13 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.example.administrator.myservertest.data.Samples;
-import com.example.administrator.myservertest.net.ServerResultHeader;
-import com.example.administrator.myservertest.net.ThemeHttpCommon;
+import com.example.administrator.myservertest.okhttp.AppHttpRequest;
 
-import java.util.HashMap;
+import java.io.IOException;
+
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.Response;
 
 public class RequestEditActivity extends AppCompatActivity implements View.OnClickListener{
     public static final String EXTRA_INDEX = "EXTRA_INDEX";
@@ -69,21 +72,49 @@ public class RequestEditActivity extends AppCompatActivity implements View.OnCli
         if(TextUtils.isEmpty(jsonParams) || TextUtils.isEmpty(url)){
             return;
         }
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                HashMap<String, String> paramsMap = new HashMap<String, String>();
-                NetOptApiHelper.addGlobalRequestValue(paramsMap, getApplicationContext(), jsonParams);
-                ThemeHttpCommon httpCommon = new ThemeHttpCommon(url);
-                ServerResultHeader csResult = httpCommon.getResponseAsCsResultPost(paramsMap, jsonParams);
-                final String respondStr =  csResult.getResponseJson();
-                handler.post(new Runnable() {
+//        new Thread(new Runnable() {
+//            @Override
+//            public void run() {
+//                HashMap<String, String> paramsMap = new HashMap<String, String>();
+//                NetOptApiHelper.addGlobalRequestValue(paramsMap, getApplicationContext(), jsonParams);
+//                ThemeHttpCommon httpCommon = new ThemeHttpCommon(url);
+//                ServerResultHeader csResult = httpCommon.getResponseAsCsResultPost(paramsMap, jsonParams);
+//                final String respondStr =  csResult.getResponseJson();
+//                handler.post(new Runnable() {
+//                    @Override
+//                    public void run() {
+//                        result_tv.setText(respondStr);
+//                    }
+//                });
+//            }
+//        }).start();
+//        AppHttpRequest doge = new AppHttpRequest.Builder().url(url).body(jsonParams).build();
+
+        AppHttpRequest.newBuilder()
+                .url(url)
+                .body(jsonParams)
+                .build()
+                .equeue(new Callback() {
                     @Override
-                    public void run() {
-                        result_tv.setText(respondStr);
+                    public void onFailure(Call call, final IOException e) {
+                        handler.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                result_tv.setText(e.getMessage());
+                            }
+                        });
+                    }
+
+                    @Override
+                    public void onResponse(Call call, Response response) throws IOException {
+                        final String responseJson = response.body().string();
+                        handler.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                result_tv.setText(responseJson);
+                            }
+                        });
                     }
                 });
-            }
-        }).start();
     }
 }
