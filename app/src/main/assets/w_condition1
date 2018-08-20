@@ -1,0 +1,16 @@
+{
+	"HeWeather6": [{
+		"basic": [{
+			"cid": "CN101230103",
+			"location": "闽侯",
+			"parent_city": "福州",
+			"admin_area": "福建",
+			"cnty": "中国",
+			"lat": "26.1485672",
+			"lon": "119.14511871",
+			"tz": "+8.00",
+			"type": "city"
+		}],
+		"status": "ok"
+	}]
+}
