@@ -48,7 +48,7 @@ public abstract class OkHttpRequestBuilder<T extends OkHttpRequestBuilder> {
      */
     public T tag(Object tag)
     {
-        this.mTag = tag;
+        this.mTag = tag.hashCode();
         return (T) this;
     }
 
