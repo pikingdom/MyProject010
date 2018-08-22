@@ -64,16 +64,23 @@ public class PostBuilder extends OkHttpRequestBuilderHasParam<PostBuilder> {
 //                FormBody.Builder encodingBuilder = new FormBody.Builder();
 //                appendParams(encodingBuilder, mParams);
 //                builder.post(encodingBuilder.build());
-                if(TextUtils.isEmpty(mJsonParams)){
-                    RequestBody body = RequestBody.create(MediaType.parse("text/json; charset=utf-8"), "");
-                    builder.post(body);
-                } else {
-                    JSONObject jsonBody = new JSONObject();
-                    for (Map.Entry<String, String> entry : mParams.entrySet()) {
-                        jsonBody.put(entry.getKey(), entry.getValue());
-                    }
-                    mJsonParams = jsonBody.toString();
+                JSONObject jsonBody = new JSONObject();
+                for (Map.Entry<String, String> entry : mParams.entrySet()) {
+                    jsonBody.put(entry.getKey(), entry.getValue());
                 }
+                mJsonParams = jsonBody.toString();
+                RequestBody body = RequestBody.create(MediaType.parse("text/json; charset=utf-8"), mJsonParams);
+                builder.post(body);
+//                if(TextUtils.isEmpty(mJsonParams)){
+//                    RequestBody body = RequestBody.create(MediaType.parse("text/json; charset=utf-8"), "");
+//                    builder.post(body);
+//                } else {
+//                    JSONObject jsonBody = new JSONObject();
+//                    for (Map.Entry<String, String> entry : mParams.entrySet()) {
+//                        jsonBody.put(entry.getKey(), entry.getValue());
+//                    }
+//                    mJsonParams = jsonBody.toString();
+//                }
             }
             addCommonHeader(builder);
             Request request = builder.build();
@@ -108,16 +115,23 @@ public class PostBuilder extends OkHttpRequestBuilderHasParam<PostBuilder> {
 //                FormBody.Builder encodingBuilder = new FormBody.Builder();
 //                appendParams(encodingBuilder, mParams);
 //                builder.post(encodingBuilder.build());
-                if(TextUtils.isEmpty(mJsonParams)){
-                    RequestBody body = RequestBody.create(MediaType.parse("text/json; charset=utf-8"), "");
-                    builder.post(body);
-                } else {
-                    JSONObject jsonBody = new JSONObject();
-                    for (Map.Entry<String, String> entry : mParams.entrySet()) {
-                        jsonBody.put(entry.getKey(), entry.getValue());
-                    }
-                    mJsonParams = jsonBody.toString();
+                JSONObject jsonBody = new JSONObject();
+                for (Map.Entry<String, String> entry : mParams.entrySet()) {
+                    jsonBody.put(entry.getKey(), entry.getValue());
                 }
+                mJsonParams = jsonBody.toString();
+                RequestBody body = RequestBody.create(MediaType.parse("text/json; charset=utf-8"), mJsonParams);
+                builder.post(body);
+//                if(TextUtils.isEmpty(mJsonParams)){
+//                    RequestBody body = RequestBody.create(MediaType.parse("text/json; charset=utf-8"), "");
+//                    builder.post(body);
+//                } else {
+//                    JSONObject jsonBody = new JSONObject();
+//                    for (Map.Entry<String, String> entry : mParams.entrySet()) {
+//                        jsonBody.put(entry.getKey(), entry.getValue());
+//                    }
+//                    mJsonParams = jsonBody.toString();
+//                }
             }
             addCommonHeader(builder);
             Request request = builder.build();
