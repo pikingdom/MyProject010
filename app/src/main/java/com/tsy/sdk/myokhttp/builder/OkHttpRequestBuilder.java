@@ -8,6 +8,7 @@ import java.util.Map;
 
 import okhttp3.Headers;
 import okhttp3.Request;
+import okhttp3.Response;
 
 /**
  * 不带param的base request body
@@ -25,6 +26,11 @@ public abstract class OkHttpRequestBuilder<T extends OkHttpRequestBuilder> {
      * @param responseHandler 自定义回调
      */
     abstract void enqueue(final IResponseHandler responseHandler);
+
+    /**
+     * 同步执行
+     */
+    abstract Response execute();
 
     public OkHttpRequestBuilder(MyOkHttp myOkHttp) {
         mMyOkHttp = myOkHttp;

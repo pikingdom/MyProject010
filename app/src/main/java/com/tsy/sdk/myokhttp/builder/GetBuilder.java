@@ -8,6 +8,7 @@ import com.tsy.sdk.myokhttp.util.LogUtils;
 import java.util.Map;
 
 import okhttp3.Request;
+import okhttp3.Response;
 
 /**
  * Get Builder
@@ -48,6 +49,33 @@ public class GetBuilder extends OkHttpRequestBuilderHasParam<GetBuilder> {
         }
     }
 
+    @Override
+    public Response execute() {
+        try {
+            if(mUrl == null || mUrl.length() == 0) {
+                throw new IllegalArgumentException("url can not be null !");
+            }
+
+            if (mParams != null && mParams.size() > 0) {
+                mUrl = appendParams(mUrl, mParams);
+            }
+
+            Request.Builder builder = new Request.Builder().url(mUrl).get();
+            appendHeaders(builder, mHeaders);
+
+            if (mTag != null) {
+                builder.tag(mTag);
+            }
+
+            Request request = builder.build();
+
+            return mMyOkHttp.getOkHttpClient().
+                    newCall(request).execute();
+        } catch (Exception e) {
+            LogUtils.e("Get enqueue error:" + e.getMessage());
+            return null;
+        }
+    }
     //append params to url
     private String appendParams(String url, Map<String, String> params) {
         StringBuilder sb = new StringBuilder();

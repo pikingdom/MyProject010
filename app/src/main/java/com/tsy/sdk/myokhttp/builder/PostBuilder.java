@@ -19,6 +19,7 @@ import okhttp3.FormBody;
 import okhttp3.MediaType;
 import okhttp3.Request;
 import okhttp3.RequestBody;
+import okhttp3.Response;
 
 /**
  * post builder
@@ -83,6 +84,48 @@ public class PostBuilder extends OkHttpRequestBuilderHasParam<PostBuilder> {
         } catch (Exception e) {
             LogUtils.e("Post enqueue error:" + e.getMessage());
             responseHandler.onFailure(0, e.getMessage());
+        }
+    }
+
+    @Override
+    public Response execute() {
+        try {
+            if(mUrl == null || mUrl.length() == 0) {
+                throw new IllegalArgumentException("url can not be null !");
+            }
+
+            Request.Builder builder = new Request.Builder().url(mUrl);
+            appendHeaders(builder, mHeaders);
+
+            if (mTag != null) {
+                builder.tag(mTag);
+            }
+
+            if(mJsonParams.length() > 0) {      //上传json格式参数
+                RequestBody body = RequestBody.create(MediaType.parse("text/json; charset=utf-8"), mJsonParams);
+                builder.post(body);
+            } else {        //普通kv参数
+//                FormBody.Builder encodingBuilder = new FormBody.Builder();
+//                appendParams(encodingBuilder, mParams);
+//                builder.post(encodingBuilder.build());
+                if(TextUtils.isEmpty(mJsonParams)){
+                    RequestBody body = RequestBody.create(MediaType.parse("text/json; charset=utf-8"), "");
+                    builder.post(body);
+                } else {
+                    JSONObject jsonBody = new JSONObject();
+                    for (Map.Entry<String, String> entry : mParams.entrySet()) {
+                        jsonBody.put(entry.getKey(), entry.getValue());
+                    }
+                    mJsonParams = jsonBody.toString();
+                }
+            }
+            addCommonHeader(builder);
+            Request request = builder.build();
+
+            return mMyOkHttp.getOkHttpClient().newCall(request).execute();
+        } catch (Exception e) {
+            LogUtils.e("Post enqueue error:" + e.getMessage());
+            return null;
         }
     }
 
