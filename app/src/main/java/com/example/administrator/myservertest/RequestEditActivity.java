@@ -81,22 +81,22 @@ public class RequestEditActivity extends AppCompatActivity implements View.OnCli
         if(TextUtils.isEmpty(url)){
             return;
         }
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                HashMap<String, String> paramsMap = new HashMap<String, String>();
-                NetOptApiHelper.addGlobalRequestValue(paramsMap, getApplicationContext(), jsonParams);
-                ThemeHttpCommon httpCommon = new ThemeHttpCommon(url);
-                ServerResultHeader csResult = httpCommon.getResponseAsCsResultPost(paramsMap, jsonParams);
-                final String respondStr =  csResult.getResponseJson();
-                handler.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        result_tv.setText(respondStr);
-                    }
-                });
-            }
-        }).start();
+//        new Thread(new Runnable() {
+//            @Override
+//            public void run() {
+//                HashMap<String, String> paramsMap = new HashMap<String, String>();
+//                NetOptApiHelper.addGlobalRequestValue(paramsMap, getApplicationContext(), jsonParams);
+//                ThemeHttpCommon httpCommon = new ThemeHttpCommon(url);
+//                ServerResultHeader csResult = httpCommon.getResponseAsCsResultPost(paramsMap, jsonParams);
+//                final String respondStr =  csResult.getResponseJson();
+//                handler.post(new Runnable() {
+//                    @Override
+//                    public void run() {
+//                        result_tv.setText(respondStr);
+//                    }
+//                });
+//            }
+//        }).start();
 
         mMyOkhttp.post().url(url).jsonParams(jsonParams).tag(this)
                 .enqueue(new JsonResponseHandler() {

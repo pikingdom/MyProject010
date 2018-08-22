@@ -5,7 +5,7 @@ import android.text.TextUtils;
 import com.example.administrator.myservertest.App;
 import com.example.administrator.myservertest.DigestUtil;
 import com.example.administrator.myservertest.NetOptApiHelper;
-import com.example.administrator.myservertest.okhttp.AppHttpRequest;
+import com.tsy.sdk.myokhttp.Common;
 import com.tsy.sdk.myokhttp.MyOkHttp;
 import com.tsy.sdk.myokhttp.callback.MyCallback;
 import com.tsy.sdk.myokhttp.response.IResponseHandler;
@@ -87,22 +87,22 @@ public class PostBuilder extends OkHttpRequestBuilderHasParam<PostBuilder> {
     }
 
     private void addCommonHeader(Request.Builder builder){
-        String sign = DigestUtil.md5Hex(AppHttpRequest.getPid() + AppHttpRequest.getMt() +
-                AppHttpRequest.getDivideVersion() +NetOptApiHelper.getDivideVersion(App.getContext())+
-                AppHttpRequest.getSupPhone() + AppHttpRequest.getSupFirm() +
-                AppHttpRequest.getImei() + AppHttpRequest.getImsi() + "" + AppHttpRequest.getCuid() + App.getContext().getPackageName()+
-                AppHttpRequest.ProtocolVersion + mJsonParams + NetOptApiHelper.REQUEST_KEY);
+        String sign = DigestUtil.md5Hex(Common.getPid() + Common.getMt() +
+                Common.getDivideVersion() +Common.getVersionCode(App.getContext())+
+                Common.getSupPhone() + Common.getSupFirm() +
+                Common.getImei() + Common.getImsi() + "" + Common.getCuid() + App.getContext().getPackageName()+
+                Common.ProtocolVersion + mJsonParams + Common.REQUEST_KEY);
 
-        builder.addHeader("PID", AppHttpRequest.getPid() + "")
-                .addHeader("MT", AppHttpRequest.getMt() + "")
-                .addHeader("DivideVersion", AppHttpRequest.getDivideVersion())
-                .addHeader("VersionCode", NetOptApiHelper.getDivideVersion(App.getContext()))
-                .addHeader("SupPhone", AppHttpRequest.getSupPhone())
-                .addHeader("SupFirm", AppHttpRequest.getSupFirm())
-                .addHeader("IMEI", AppHttpRequest.getImei())
-                .addHeader("IMSI", AppHttpRequest.getImsi())
+        builder.addHeader("PID", Common.getPid() + "")
+                .addHeader("MT", Common.getMt() + "")
+                .addHeader("DivideVersion", Common.getDivideVersion())
+                .addHeader("VersionCode", Common.getVersionCode(App.getContext())+"")
+                .addHeader("SupPhone", Common.getSupPhone())
+                .addHeader("SupFirm", Common.getSupFirm())
+                .addHeader("IMEI", Common.getImei())
+                .addHeader("IMSI", Common.getImsi())
                 .addHeader("SessionId", "")
-                .addHeader("CUID", AppHttpRequest.getCuid())
+                .addHeader("CUID", Common.getCuid())
                 .addHeader("PkgName", App.getContext().getPackageName())
                 .addHeader("ProtocolVersion", NetOptApiHelper.ProtocolVersion)
                 .addHeader("Sign", sign);
