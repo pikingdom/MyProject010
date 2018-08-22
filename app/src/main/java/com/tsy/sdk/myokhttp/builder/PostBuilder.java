@@ -147,7 +147,7 @@ public class PostBuilder extends OkHttpRequestBuilderHasParam<PostBuilder> {
                 .addHeader("SessionId", "")
                 .addHeader("CUID", Common.getCuid())
                 .addHeader("PkgName", App.getContext().getPackageName())
-                .addHeader("ProtocolVersion", NetOptApiHelper.ProtocolVersion)
+                .addHeader("ProtocolVersion", Common.ProtocolVersion)
                 .addHeader("Sign", sign);
     }
 
