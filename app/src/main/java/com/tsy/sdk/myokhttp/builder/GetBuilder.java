@@ -23,22 +23,7 @@ public class GetBuilder extends OkHttpRequestBuilderHasParam<GetBuilder> {
     @Override
     public void enqueue(final IResponseHandler responseHandler) {
         try {
-            if(mUrl == null || mUrl.length() == 0) {
-                throw new IllegalArgumentException("url can not be null !");
-            }
-
-            if (mParams != null && mParams.size() > 0) {
-                mUrl = appendParams(mUrl, mParams);
-            }
-
-            Request.Builder builder = new Request.Builder().url(mUrl).get();
-            appendHeaders(builder, mHeaders);
-
-            if (mTag != null) {
-                builder.tag(mTag);
-            }
-
-            Request request = builder.build();
+            Request request = getRequest();
 
             mMyOkHttp.getOkHttpClient().
                     newCall(request).
@@ -49,25 +34,29 @@ public class GetBuilder extends OkHttpRequestBuilderHasParam<GetBuilder> {
         }
     }
 
+    private Request getRequest() {
+        if(mUrl == null || mUrl.length() == 0) {
+            throw new IllegalArgumentException("url can not be null !");
+        }
+
+        if (mParams != null && mParams.size() > 0) {
+            mUrl = appendParams(mUrl, mParams);
+        }
+
+        Request.Builder builder = new Request.Builder().url(mUrl).get();
+        appendHeaders(builder, mHeaders);
+
+        if (mTag != null) {
+            builder.tag(mTag);
+        }
+
+        return builder.build();
+    }
+
     @Override
     public Response execute() {
         try {
-            if(mUrl == null || mUrl.length() == 0) {
-                throw new IllegalArgumentException("url can not be null !");
-            }
-
-            if (mParams != null && mParams.size() > 0) {
-                mUrl = appendParams(mUrl, mParams);
-            }
-
-            Request.Builder builder = new Request.Builder().url(mUrl).get();
-            appendHeaders(builder, mHeaders);
-
-            if (mTag != null) {
-                builder.tag(mTag);
-            }
-
-            Request request = builder.build();
+            Request request = getRequest();
 
             return mMyOkHttp.getOkHttpClient().
                     newCall(request).execute();

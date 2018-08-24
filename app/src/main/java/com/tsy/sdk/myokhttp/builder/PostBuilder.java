@@ -1,16 +1,14 @@
 package com.tsy.sdk.myokhttp.builder;
 
-import android.text.TextUtils;
-
 import com.example.administrator.myservertest.App;
 import com.example.administrator.myservertest.DigestUtil;
-import com.example.administrator.myservertest.NetOptApiHelper;
 import com.tsy.sdk.myokhttp.Common;
 import com.tsy.sdk.myokhttp.MyOkHttp;
 import com.tsy.sdk.myokhttp.callback.MyCallback;
 import com.tsy.sdk.myokhttp.response.IResponseHandler;
 import com.tsy.sdk.myokhttp.util.LogUtils;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.Map;
@@ -46,44 +44,7 @@ public class PostBuilder extends OkHttpRequestBuilderHasParam<PostBuilder> {
     @Override
     public void enqueue(IResponseHandler responseHandler) {
         try {
-            if(mUrl == null || mUrl.length() == 0) {
-                throw new IllegalArgumentException("url can not be null !");
-            }
-
-            Request.Builder builder = new Request.Builder().url(mUrl);
-            appendHeaders(builder, mHeaders);
-
-            if (mTag != null) {
-                builder.tag(mTag);
-            }
-
-            if(mJsonParams.length() > 0) {      //上传json格式参数
-                RequestBody body = RequestBody.create(MediaType.parse("text/json; charset=utf-8"), mJsonParams);
-                builder.post(body);
-            } else {        //普通kv参数
-//                FormBody.Builder encodingBuilder = new FormBody.Builder();
-//                appendParams(encodingBuilder, mParams);
-//                builder.post(encodingBuilder.build());
-                JSONObject jsonBody = new JSONObject();
-                for (Map.Entry<String, String> entry : mParams.entrySet()) {
-                    jsonBody.put(entry.getKey(), entry.getValue());
-                }
-                mJsonParams = jsonBody.toString();
-                RequestBody body = RequestBody.create(MediaType.parse("text/json; charset=utf-8"), mJsonParams);
-                builder.post(body);
-//                if(TextUtils.isEmpty(mJsonParams)){
-//                    RequestBody body = RequestBody.create(MediaType.parse("text/json; charset=utf-8"), "");
-//                    builder.post(body);
-//                } else {
-//                    JSONObject jsonBody = new JSONObject();
-//                    for (Map.Entry<String, String> entry : mParams.entrySet()) {
-//                        jsonBody.put(entry.getKey(), entry.getValue());
-//                    }
-//                    mJsonParams = jsonBody.toString();
-//                }
-            }
-            addCommonHeader(builder);
-            Request request = builder.build();
+            Request request = getRequest();
 
             mMyOkHttp.getOkHttpClient()
                     .newCall(request)
@@ -97,24 +58,45 @@ public class PostBuilder extends OkHttpRequestBuilderHasParam<PostBuilder> {
     @Override
     public Response execute() {
         try {
-            if(mUrl == null || mUrl.length() == 0) {
-                throw new IllegalArgumentException("url can not be null !");
-            }
+            Request request = getRequest();
+            return mMyOkHttp.getOkHttpClient().newCall(request).execute();
+        } catch (Exception e) {
+            LogUtils.e("Post enqueue error:" + e.getMessage());
+            return null;
+        }
+    }
 
-            Request.Builder builder = new Request.Builder().url(mUrl);
-            appendHeaders(builder, mHeaders);
+    public String executeStr() {
+        Response response = execute();
+        if(response != null && response.isSuccessful() && response.body() != null){
+            return response.body().toString();
+        }
+        return null;
+    }
 
-            if (mTag != null) {
-                builder.tag(mTag);
-            }
+    private Request getRequest() throws JSONException {
+        if(mUrl == null || mUrl.length() == 0) {
+            throw new IllegalArgumentException("url can not be null !");
+        }
 
-            if(mJsonParams.length() > 0) {      //上传json格式参数
-                RequestBody body = RequestBody.create(MediaType.parse("text/json; charset=utf-8"), mJsonParams);
-                builder.post(body);
-            } else {        //普通kv参数
+        Request.Builder builder = new Request.Builder().url(mUrl);
+        appendHeaders(builder, mHeaders);
+
+        if (mTag != null) {
+            builder.tag(mTag);
+        }
+
+        if(mJsonParams.length() > 0) {      //上传json格式参数
+            RequestBody body = RequestBody.create(MediaType.parse("text/json; charset=utf-8"), mJsonParams);
+            builder.post(body);
+        } else {        //普通kv参数
 //                FormBody.Builder encodingBuilder = new FormBody.Builder();
 //                appendParams(encodingBuilder, mParams);
 //                builder.post(encodingBuilder.build());
+            if(mParams == null){
+                RequestBody body = RequestBody.create(MediaType.parse("text/json; charset=utf-8"), "");
+                builder.post(body);
+            } else {
                 JSONObject jsonBody = new JSONObject();
                 for (Map.Entry<String, String> entry : mParams.entrySet()) {
                     jsonBody.put(entry.getKey(), entry.getValue());
@@ -122,6 +104,7 @@ public class PostBuilder extends OkHttpRequestBuilderHasParam<PostBuilder> {
                 mJsonParams = jsonBody.toString();
                 RequestBody body = RequestBody.create(MediaType.parse("text/json; charset=utf-8"), mJsonParams);
                 builder.post(body);
+            }
 //                if(TextUtils.isEmpty(mJsonParams)){
 //                    RequestBody body = RequestBody.create(MediaType.parse("text/json; charset=utf-8"), "");
 //                    builder.post(body);
@@ -132,15 +115,9 @@ public class PostBuilder extends OkHttpRequestBuilderHasParam<PostBuilder> {
 //                    }
 //                    mJsonParams = jsonBody.toString();
 //                }
-            }
-            addCommonHeader(builder);
-            Request request = builder.build();
-
-            return mMyOkHttp.getOkHttpClient().newCall(request).execute();
-        } catch (Exception e) {
-            LogUtils.e("Post enqueue error:" + e.getMessage());
-            return null;
         }
+        addCommonHeader(builder);
+        return builder.build();
     }
 
     private void addCommonHeader(Request.Builder builder){

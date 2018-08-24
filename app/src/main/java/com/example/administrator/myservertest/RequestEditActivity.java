@@ -16,6 +16,7 @@ import com.example.administrator.myservertest.net.ThemeHttpCommon;
 import com.google.gson.Gson;
 import com.tsy.sdk.myokhttp.MyOkHttp;
 import com.tsy.sdk.myokhttp.response.JsonResponseHandler;
+import com.tsy.sdk.myokhttp.util.MyOKhttpHeler;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -102,7 +103,11 @@ public class RequestEditActivity extends AppCompatActivity implements View.OnCli
                 .enqueue(new JsonResponseHandler() {
                     @Override
                     public void onSuccess(int statusCode, final JSONObject response) {
-                        result_tv.setText(response.toString());
+                        String content="";
+                        if(!MyOKhttpHeler.isEmpty(response.toString())){
+                            content = response.toString();
+                        }
+                        result_tv.setText(content);
                     }
 
                     @Override

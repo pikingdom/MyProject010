@@ -27,7 +27,7 @@ public class Samples {
         //Video items
         videoSamples = new ArrayList<>();
         videoSamples.add(new Sample("获取服务端当前日期时间(1)", HOST+"action.ashx/commonaction/1", ""));
-        videoSamples.add(new Sample("获取后台配置的参数信息(2)", HOST+"action.ashx/commonaction/2","{\"paramname\":\"Config001\",\"ver\":0}"));
+        videoSamples.add(new Sample("获取后台配置的参数信息(2)", HOST+"action.ashx/commonaction/2","{\"paramname\":\"Config001\",\"ver\":\"0\"}"));
         videoSamples.add(new Sample("获取消息推送(3)", HOST+"action.ashx/commonaction/3",""));
         videoSamples.add(new Sample("下载测试(4)", "",""));
         videoSamples.add(new Sample("获取天气城市(101)", HOST+"action.ashx/weather/101","{\"longitude\":\"116.4\",\"latitude\":\"39.1\"}"));
