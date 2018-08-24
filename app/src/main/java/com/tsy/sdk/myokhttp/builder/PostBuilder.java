@@ -11,6 +11,7 @@ import com.tsy.sdk.myokhttp.util.LogUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.IOException;
 import java.util.Map;
 
 import okhttp3.FormBody;
@@ -69,7 +70,11 @@ public class PostBuilder extends OkHttpRequestBuilderHasParam<PostBuilder> {
     public String executeStr() {
         Response response = execute();
         if(response != null && response.isSuccessful() && response.body() != null){
-            return response.body().toString();
+            try {
+                return response.body().string();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
         return null;
     }
