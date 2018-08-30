@@ -59,19 +59,29 @@ public class MyOkHttp {
                 .build();
     }
 
+    private void check(){
+        if(applicationConext == null){
+            throw new IllegalArgumentException("applicationConext is null");
+        }
+    }
+
     public GetBuilder get() {
+        check();
         return new GetBuilder(this,false);
     }
     public GetBuilder getH() {
+        check();
         return new GetBuilder(this,true);
     }
 
     public PostBuilder post() {
+        check();
         PostBuilder postBuilder = new PostBuilder(this,false);
         return postBuilder;
     }
 
     public PostBuilder postH() {
+        check();
         PostBuilder postBuilder = new PostBuilder(this,true);
         return postBuilder;
     }
@@ -82,6 +92,7 @@ public class MyOkHttp {
      * @param tag tag
      */
     public void cancel(Object tag) {
+        check();
         Dispatcher dispatcher = mOkHttpClient.dispatcher();
         for (Call call : dispatcher.queuedCalls()) {
             if (tag.equals(call.request().tag())) {

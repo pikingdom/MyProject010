@@ -7,8 +7,6 @@ import android.os.Build;
 import android.telephony.TelephonyManager;
 import android.text.TextUtils;
 
-import com.example.administrator.myservertest.App;
-
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.UUID;
@@ -43,7 +41,7 @@ public class Common {
 
     public static String getDivideVersion(){
         if (null == DivideVersion)
-            DivideVersion = utf8URLencode(getDivideVersion(App.getContext()));
+            DivideVersion = utf8URLencode(getDivideVersion(MyOkHttp.getInstance().getApplicationConext()));
         return  DivideVersion;
     }
     public static String getDivideVersion(Context context) {
@@ -65,19 +63,19 @@ public class Common {
 
     public static String getImei(){
         if (null == IMEI)
-            IMEI = utf8URLencode(getIMEI(App.getContext()));
+            IMEI = utf8URLencode(getIMEI(MyOkHttp.getInstance().getApplicationConext()));
         return IMEI;
     }
 
     public static String getImsi(){
         if (null == IMSI)
-            IMSI = utf8URLencode(getIMSI(App.getContext()));
+            IMSI = utf8URLencode(getIMSI(MyOkHttp.getInstance().getApplicationConext()));
         return IMSI;
     }
 
     public static String getCuid(){
         if (null == CUID)
-            CUID = getCUID(App.getContext());
+            CUID = getCUID(MyOkHttp.getInstance().getApplicationConext());
         return CUID;
     }
 
