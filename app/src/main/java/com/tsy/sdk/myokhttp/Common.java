@@ -9,9 +9,13 @@ import android.text.TextUtils;
 
 import com.example.administrator.myservertest.App;
 
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import okhttp3.Request;
 
 /**
  * Created by Administrator on 2018/8/22.
@@ -207,5 +211,65 @@ public class Common {
         }
 
         return imsi;
+    }
+
+    public static String md5Hex(String data) {
+        return toHexString(md5(data));
+    }
+
+    public static String toHexString(byte[] byteArray) {
+        if (byteArray == null || byteArray.length < 1)
+            return "";
+        final StringBuilder hexString = new StringBuilder();
+        for (int i = 0; i < byteArray.length; i++) {
+            if ((byteArray[i] & 0xff) < 0x10)//0~F前面不零
+                hexString.append("0");
+            hexString.append(Integer.toHexString(0xFF & byteArray[i]));
+        }
+        return hexString.toString().toLowerCase();
+    }
+
+
+    public static byte[] md5(String data) {
+        return md5(data.getBytes());
+    }
+    public static byte[] md5(byte[] data) {
+        return getMd5Digest().digest(data);
+    }
+
+    private static MessageDigest getMd5Digest() {
+        return getDigest("MD5");
+    }
+
+
+    public static void addCommonHeader(Request.Builder builder,String mJsonParams){
+        Context context = MyOkHttp.getInstance().getApplicationConext();
+        String sign = Common.md5Hex(Common.getPid() + Common.getMt() +
+                Common.getDivideVersion() +Common.getVersionCode(context)+
+                Common.getSupPhone() + Common.getSupFirm() +
+                Common.getImei() + Common.getImsi() + "" + Common.getCuid() + context.getPackageName()+
+                Common.ProtocolVersion + mJsonParams + Common.REQUEST_KEY);
+
+        builder.addHeader("PID", Common.getPid() + "")
+                .addHeader("MT", Common.getMt() + "")
+                .addHeader("DivideVersion", Common.getDivideVersion())
+                .addHeader("VersionCode", Common.getVersionCode(context)+"")
+                .addHeader("SupPhone", Common.getSupPhone())
+                .addHeader("SupFirm", Common.getSupFirm())
+                .addHeader("IMEI", Common.getImei())
+                .addHeader("IMSI", Common.getImsi())
+                .addHeader("SessionId", "")
+                .addHeader("CUID", Common.getCuid())
+                .addHeader("PkgName", context.getPackageName())
+                .addHeader("ProtocolVersion", Common.ProtocolVersion)
+                .addHeader("Sign", sign);
+    }
+
+    static MessageDigest getDigest(String algorithm) {
+        try {
+            return MessageDigest.getInstance(algorithm);
+        } catch (NoSuchAlgorithmException e) {
+            throw new RuntimeException(e.getMessage());
+        }
     }
 }

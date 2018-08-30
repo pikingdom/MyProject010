@@ -1,7 +1,7 @@
 package com.tsy.sdk.myokhttp.builder;
 
-import com.example.administrator.myservertest.App;
-import com.example.administrator.myservertest.DigestUtil;
+import android.content.Context;
+
 import com.tsy.sdk.myokhttp.Common;
 import com.tsy.sdk.myokhttp.MyOkHttp;
 import com.tsy.sdk.myokhttp.callback.MyCallback;
@@ -27,9 +27,11 @@ import okhttp3.Response;
 public class PostBuilder extends OkHttpRequestBuilderHasParam<PostBuilder> {
 
     private String mJsonParams = "";
+    private boolean addCommonHead = false;
 
-    public PostBuilder(MyOkHttp myOkHttp) {
+    public PostBuilder(MyOkHttp myOkHttp,boolean addHead) {
         super(myOkHttp);
+        this.addCommonHead = addHead;
     }
 
     /**
@@ -121,31 +123,14 @@ public class PostBuilder extends OkHttpRequestBuilderHasParam<PostBuilder> {
 //                    mJsonParams = jsonBody.toString();
 //                }
         }
-        addCommonHeader(builder);
+        if(addCommonHead){
+            Common.addCommonHeader(builder,mJsonParams);
+        }
         return builder.build();
     }
 
-    private void addCommonHeader(Request.Builder builder){
-        String sign = DigestUtil.md5Hex(Common.getPid() + Common.getMt() +
-                Common.getDivideVersion() +Common.getVersionCode(App.getContext())+
-                Common.getSupPhone() + Common.getSupFirm() +
-                Common.getImei() + Common.getImsi() + "" + Common.getCuid() + App.getContext().getPackageName()+
-                Common.ProtocolVersion + mJsonParams + Common.REQUEST_KEY);
 
-        builder.addHeader("PID", Common.getPid() + "")
-                .addHeader("MT", Common.getMt() + "")
-                .addHeader("DivideVersion", Common.getDivideVersion())
-                .addHeader("VersionCode", Common.getVersionCode(App.getContext())+"")
-                .addHeader("SupPhone", Common.getSupPhone())
-                .addHeader("SupFirm", Common.getSupFirm())
-                .addHeader("IMEI", Common.getImei())
-                .addHeader("IMSI", Common.getImsi())
-                .addHeader("SessionId", "")
-                .addHeader("CUID", Common.getCuid())
-                .addHeader("PkgName", App.getContext().getPackageName())
-                .addHeader("ProtocolVersion", Common.ProtocolVersion)
-                .addHeader("Sign", sign);
-    }
+
 
     //append params to form builder
     private void appendParams(FormBody.Builder builder, Map<String, String> params) {

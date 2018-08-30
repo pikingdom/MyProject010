@@ -1,10 +1,13 @@
 package com.tsy.sdk.myokhttp;
 
+import android.content.Context;
 import android.os.Handler;
 import android.os.Looper;
 
 import com.tsy.sdk.myokhttp.builder.GetBuilder;
 import com.tsy.sdk.myokhttp.builder.PostBuilder;
+
+import java.util.concurrent.TimeUnit;
 
 import okhttp3.Call;
 import okhttp3.Dispatcher;
@@ -22,44 +25,60 @@ public class MyOkHttp {
         return mOkHttpClient;
     }
 
-    /**
-     * construct
-     */
-    public MyOkHttp()
-    {
-        this(null);
-    }
+    private static MyOkHttp instance;
+    private Context applicationConext;
 
-    /**
-     * construct
-     * @param okHttpClient custom okhttpclient
-     */
-    public MyOkHttp(OkHttpClient okHttpClient)
-    {
-        if(mOkHttpClient == null) {
-            synchronized (MyOkHttp.class) {
-                if (mOkHttpClient == null) {
-                    if (okHttpClient == null) {
-                        mOkHttpClient = new OkHttpClient();
-                    } else {
-                        mOkHttpClient = okHttpClient;
-                    }
-                }
-            }
+    public void setApplicationConext(Context conext){
+        if(conext != null){
+            applicationConext = conext.getApplicationContext();
         }
     }
 
+    public Context getApplicationConext(){
+        return applicationConext;
+    }
+
+    public static MyOkHttp getInstance() {
+        if (instance == null) {
+            synchronized (MyOkHttp.class) {
+                if (instance == null) {
+                    instance = new MyOkHttp();
+                }
+            }
+        }
+        return instance;
+    }
+
+    /**
+     * construct
+     */
+    private MyOkHttp() {
+        mOkHttpClient = new OkHttpClient.Builder()
+                .connectTimeout(10000L, TimeUnit.MILLISECONDS)
+                .readTimeout(10000L, TimeUnit.MILLISECONDS)
+                .build();
+    }
+
     public GetBuilder get() {
-        return new GetBuilder(this);
+        return new GetBuilder(this,false);
+    }
+    public GetBuilder getH() {
+        return new GetBuilder(this,true);
     }
 
     public PostBuilder post() {
-        PostBuilder postBuilder = new PostBuilder(this);
+        PostBuilder postBuilder = new PostBuilder(this,false);
+        return postBuilder;
+    }
+
+    public PostBuilder postH() {
+        PostBuilder postBuilder = new PostBuilder(this,true);
         return postBuilder;
     }
 
     /**
      * do cacel by tag
+     *
      * @param tag tag
      */
     public void cancel(Object tag) {

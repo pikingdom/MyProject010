@@ -1,10 +1,12 @@
 package com.tsy.sdk.myokhttp.builder;
 
+import com.tsy.sdk.myokhttp.Common;
 import com.tsy.sdk.myokhttp.MyOkHttp;
 import com.tsy.sdk.myokhttp.callback.MyCallback;
 import com.tsy.sdk.myokhttp.response.IResponseHandler;
 import com.tsy.sdk.myokhttp.util.LogUtils;
 
+import java.io.IOException;
 import java.util.Map;
 
 import okhttp3.Request;
@@ -15,9 +17,11 @@ import okhttp3.Response;
  * Created by tsy on 16/9/18.
  */
 public class GetBuilder extends OkHttpRequestBuilderHasParam<GetBuilder> {
+    private boolean addCommonHead = false;
 
-    public GetBuilder(MyOkHttp myOkHttp) {
+    public GetBuilder(MyOkHttp myOkHttp,boolean addHead) {
         super(myOkHttp);
+        this.addCommonHead = addHead;
     }
 
     @Override
@@ -49,7 +53,9 @@ public class GetBuilder extends OkHttpRequestBuilderHasParam<GetBuilder> {
         if (mTag != null) {
             builder.tag(mTag);
         }
-
+        if(addCommonHead){
+            Common.addCommonHeader(builder,"");
+        }
         return builder.build();
     }
 
@@ -64,6 +70,18 @@ public class GetBuilder extends OkHttpRequestBuilderHasParam<GetBuilder> {
             LogUtils.e("Get enqueue error:" + e.getMessage());
             return null;
         }
+    }
+
+    public String executeStr() {
+        Response response = execute();
+        if(response != null && response.isSuccessful() && response.body() != null){
+            try {
+                return response.body().string();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        return null;
     }
     //append params to url
     private String appendParams(String url, Map<String, String> params) {

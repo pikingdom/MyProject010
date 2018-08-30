@@ -11,19 +11,9 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.example.administrator.myservertest.data.Samples;
-import com.example.administrator.myservertest.net.ServerResultHeader;
-import com.example.administrator.myservertest.net.ThemeHttpCommon;
-import com.google.gson.Gson;
 import com.tsy.sdk.myokhttp.MyOkHttp;
 import com.tsy.sdk.myokhttp.response.JsonResponseHandler;
 import com.tsy.sdk.myokhttp.util.MyOKhttpHeler;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.util.HashMap;
-import java.util.Map;
 
 public class RequestEditActivity extends AppCompatActivity implements View.OnClickListener{
     public static final String EXTRA_INDEX = "EXTRA_INDEX";
@@ -37,7 +27,6 @@ public class RequestEditActivity extends AppCompatActivity implements View.OnCli
     private int selectedIndex;
 
     private Handler handler = new Handler();
-    private MyOkHttp mMyOkhttp;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -46,7 +35,6 @@ public class RequestEditActivity extends AppCompatActivity implements View.OnCli
         Bundle extras = getIntent().getExtras();
         selectedIndex = extras.getInt(EXTRA_INDEX, 0);
         initData();
-        mMyOkhttp = App.getContext().getMyOkHttp();
 
     }
 
@@ -99,19 +87,15 @@ public class RequestEditActivity extends AppCompatActivity implements View.OnCli
 //            }
 //        }).start();
 
-        mMyOkhttp.post().url(url).jsonParams(jsonParams).tag(this)
+        MyOkHttp.getInstance().postH().url(url).jsonParams(jsonParams).tag(this)
                 .enqueue(new JsonResponseHandler() {
                     @Override
-                    public void onSuccess(int statusCode, final JSONObject response) {
+                    public void onSuccess(int statusCode, final String response) {
                         String content="";
-                        if(!MyOKhttpHeler.isEmpty(response.toString())){
+                        if(!MyOKhttpHeler.isEmpty(response)){
                             content = response.toString();
                         }
                         result_tv.setText(content);
-                    }
-
-                    @Override
-                    public void onSuccess(int statusCode, JSONArray response) {
                     }
 
                     @Override
@@ -124,7 +108,7 @@ public class RequestEditActivity extends AppCompatActivity implements View.OnCli
 
     @Override
     protected void onDestroy() {
-        mMyOkhttp.cancel(this);
+        MyOkHttp.getInstance().cancel(this);
         super.onDestroy();
     }
 }
