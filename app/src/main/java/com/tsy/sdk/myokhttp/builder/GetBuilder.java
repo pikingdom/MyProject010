@@ -19,7 +19,7 @@ import okhttp3.Response;
 public class GetBuilder extends OkHttpRequestBuilderHasParam<GetBuilder> {
     private boolean addCommonHead = false;
 
-    public GetBuilder(MyOkHttp myOkHttp,boolean addHead) {
+    public GetBuilder(MyOkHttp myOkHttp, boolean addHead) {
         super(myOkHttp);
         this.addCommonHead = addHead;
     }

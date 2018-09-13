@@ -243,7 +243,7 @@ public class Common {
     public static void addCommonHeader(Request.Builder builder,String mJsonParams){
         Context context = MyOkHttp.getInstance().getApplicationConext();
         String sign = Common.md5Hex(Common.getPid() + Common.getMt() +
-                Common.getDivideVersion() +Common.getVersionCode(context)+
+                Common.getDivideVersion() + Common.getVersionCode(context)+
                 Common.getSupPhone() + Common.getSupFirm() +
                 Common.getImei() + Common.getImsi() + "" + Common.getCuid() + context.getPackageName()+
                 Common.ProtocolVersion + mJsonParams + Common.REQUEST_KEY);

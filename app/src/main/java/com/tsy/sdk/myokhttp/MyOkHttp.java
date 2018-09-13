@@ -9,6 +9,11 @@ import com.tsy.sdk.myokhttp.builder.PostBuilder;
 
 import java.util.concurrent.TimeUnit;
 
+import javax.net.ssl.HostnameVerifier;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLSession;
+import javax.net.ssl.TrustManager;
+
 import okhttp3.Call;
 import okhttp3.Dispatcher;
 import okhttp3.OkHttpClient;
@@ -20,7 +25,7 @@ import okhttp3.OkHttpClient;
 public class MyOkHttp {
     private static OkHttpClient mOkHttpClient;
     public static Handler mHandler = new Handler(Looper.getMainLooper());
-
+    private final String invenoContentType = "application/x-www-form-urlencoded";
     public OkHttpClient getOkHttpClient() {
         return mOkHttpClient;
     }
@@ -53,10 +58,29 @@ public class MyOkHttp {
      * construct
      */
     private MyOkHttp() {
-        mOkHttpClient = new OkHttpClient.Builder()
-                .connectTimeout(10000L, TimeUnit.MILLISECONDS)
-                .readTimeout(10000L, TimeUnit.MILLISECONDS)
-                .build();
+        try {
+            SSLContext sslContext= SSLContext.getInstance("SSL");
+            TrustManager[] tm={new MyX509TrustManager()};
+            sslContext.init(null, tm, new java.security.SecureRandom());;
+            mOkHttpClient = new OkHttpClient.Builder()
+                    .connectTimeout(10000L, TimeUnit.MILLISECONDS)
+                    .readTimeout(10000L, TimeUnit.MILLISECONDS)
+                    .hostnameVerifier(new HostnameVerifier() {
+                        @Override
+                        public boolean verify(String hostname, SSLSession session) {
+                            return true;
+                        }
+                    })
+                    .sslSocketFactory(sslContext.getSocketFactory(),new MyX509TrustManager())
+                    .build();
+        } catch (Exception e) {
+            e.printStackTrace();
+            mOkHttpClient = new OkHttpClient.Builder()
+                    .connectTimeout(10000L, TimeUnit.MILLISECONDS)
+                    .readTimeout(10000L, TimeUnit.MILLISECONDS).build();
+        }
+
+
     }
 
     private void check(){
@@ -74,9 +98,20 @@ public class MyOkHttp {
         return new GetBuilder(this,true);
     }
 
+//    public GetBuilder getInveno() {
+//        check();
+//        return new GetBuilder(this,false);
+//    }
+
     public PostBuilder post() {
         check();
         PostBuilder postBuilder = new PostBuilder(this,false);
+        return postBuilder;
+    }
+
+    public PostBuilder postInveno() {
+        check();
+        PostBuilder postBuilder = new PostBuilder(this,false,invenoContentType);
         return postBuilder;
     }
 

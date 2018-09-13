@@ -24,7 +24,7 @@ public class MyCallback implements Callback {
     @Override
     public void onFailure(Call call, final IOException e) {
         LogUtils.e("onFailure", e);
-
+        if(mResponseHandler == null) return;
         MyOkHttp.mHandler.post(new Runnable() {
             @Override
             public void run() {
@@ -35,6 +35,7 @@ public class MyCallback implements Callback {
 
     @Override
     public void onResponse(Call call, final Response response) {
+        if(mResponseHandler == null) return;
         if(response.isSuccessful()) {
             mResponseHandler.onSuccess(response);
         } else {

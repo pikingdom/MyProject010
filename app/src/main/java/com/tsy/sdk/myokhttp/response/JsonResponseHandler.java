@@ -20,7 +20,6 @@ public abstract class JsonResponseHandler implements IResponseHandler {
     public final void onSuccess(final Response response) {
         ResponseBody responseBody = response.body();
         String responseBodyStr = "";
-
         try {
             responseBodyStr = responseBody.string();
         } catch (IOException e) {
@@ -49,6 +48,7 @@ public abstract class JsonResponseHandler implements IResponseHandler {
                     }
                 });
             } else {
+                onJsonParse(response.code(),finalResponseBodyStr);
                 MyOkHttp.mHandler.post(new Runnable() {
                     @Override
                     public void run() {
@@ -68,8 +68,9 @@ public abstract class JsonResponseHandler implements IResponseHandler {
         }
     }
 
-    public void onSuccess(int statusCode, String response) {
-        LogUtils.w("onSuccess(int statusCode, JSONObject response) was not overriden, but callback was received");
-    }
+    public abstract void onSuccess(int statusCode, String response);
 
+    public void onJsonParse(int statusCode,String response) throws Exception {
+
+    }
 }
