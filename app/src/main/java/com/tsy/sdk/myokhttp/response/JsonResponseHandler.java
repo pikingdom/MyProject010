@@ -70,7 +70,7 @@ public abstract class JsonResponseHandler implements IResponseHandler {
 
     public abstract void onSuccess(int statusCode, String response);
 
-    public void onJsonParse(int statusCode,String response) throws Exception {
+    public void onJsonParse(int statusCode,String response) throws Exception{
 
     }
 }

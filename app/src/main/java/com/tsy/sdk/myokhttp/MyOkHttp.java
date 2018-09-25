@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.Handler;
 import android.os.Looper;
 
+import com.tsy.sdk.myokhttp.builder.DownloadBuilder;
 import com.tsy.sdk.myokhttp.builder.GetBuilder;
 import com.tsy.sdk.myokhttp.builder.PostBuilder;
 
@@ -59,7 +60,7 @@ public class MyOkHttp {
      */
     private MyOkHttp() {
         try {
-            SSLContext sslContext= SSLContext.getInstance("SSL");
+            SSLContext sslContext=SSLContext.getInstance("SSL");
             TrustManager[] tm={new MyX509TrustManager()};
             sslContext.init(null, tm, new java.security.SecureRandom());;
             mOkHttpClient = new OkHttpClient.Builder()
@@ -119,6 +120,10 @@ public class MyOkHttp {
         check();
         PostBuilder postBuilder = new PostBuilder(this,true);
         return postBuilder;
+    }
+
+    public DownloadBuilder download() {
+        return new DownloadBuilder(this);
     }
 
     /**
