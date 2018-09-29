@@ -30,6 +30,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        Log.e("zhenghonglin","11111111111111111");
 //        new Thread(new Runnable() {
 //            @Override
 //            public void run() {
